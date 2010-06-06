@@ -226,6 +226,112 @@ sub parse_response {
 	return $json_text;
 }
 
+=head1 EXTENSION
+
+The extension variable is used by GitHub to set proper syntax
+highlighting rules.
+
+GitHub supports the following extensions/languages:
+
+	.txt		Plain Text
+	.as		ActionScript
+	.c		C
+	.cs		C#
+	.cpp		C++
+	.css		CSS
+	.cl		Common Lisp
+	.diff		Diff
+	.el		Emacs Lisp
+	.hrl		Erlang
+	.html		HTML
+	.hs		Haskell
+	.java		Java
+	.js		JavaScript
+	.lua		Lua
+	.m		Objective-C
+	.php		PHP
+	.pl		Perl
+	.py		Python
+	.rb		Ruby
+	.sql		SQL
+	.scala		Scala
+	.sls		Scheme
+	.tex		TeX
+	.xml		XML
+	.ascx		ASP
+	.scpt		AppleScript
+	.arc		Arc
+	.asm		Assembly
+	.bat		Batchfile
+	.befunge	Befunge
+	.boo		Boo
+	.b		Brainfuck
+	.ck		ChucK
+	.clj		Clojure
+	.coffee		CoffeeScript
+	.cfm		ColdFusion
+	.feature	Cucumber
+	.d		D
+	.darcspatch	Darcs Patch
+	.pas		Delphi
+	.duby		Duby
+	.dylan		Dylan
+	.e		Eiffel
+	.f		FORTRAN
+	.s		GAS
+	.kid		Genshi
+	.ebuild		Gentoo Ebuild
+	.eclass		Gentoo Eclass
+	.po		Gettext Catalog
+	.go		Go
+	.man		Groff
+	.mustache	HTML+Django
+	.erb		HTML+ERB
+	.phtml		HTML+PHP
+	.hx		HaXe
+	.haml		Haml
+	.ini		INI
+	.weechatlog	IRC log
+	.io		Io
+	.ll		LLVM
+	.mak		Makefile
+	.mao		Mako
+	.ron		Markdown
+	.matlab		Matlab
+	.mxt		Max/MSP
+	.md		MiniD
+	.moo		Moocode
+	.myt		Myghty
+	.nu		Nu
+	.numpy		NumPy
+	.ml		OCaml
+	.j		Objective-J
+	.pir		Parrot Internal Representation
+	.pd		Pure Data
+	.pytb		Python traceback
+	.r		R
+	.rhtml		RHTML
+	.raw		Raw token data
+	.cw		Redcode
+	.sass		Sass
+	.self		Self
+	.sh		Shell
+	.st		Smalltalk
+	.tpl		Smarty
+	.sc		SuperCollider
+	.tcl		Tcl
+	.tcsh		Tcsh
+	.txt		Text
+	.vhdl		VHDL
+	.v		Verilog
+	.vim		VimL
+	.bas		Visual Basic
+	.yml		YAML
+	.jsp		jsp
+	.mu		mupad
+	.ooc		ooc
+	.rst		reStructuredText
+
 =head1 AUTHOR
 
 Alessandro Ghedini, C<< <alexbio at cpan.org> >>
