@@ -14,11 +14,11 @@ WWW::GitHub::Gist - Perl interface to Gist.GitHub.com
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $GIST_URL   = 'http://gist.github.com';
 my $API_URL    = 'http://gist.github.com/api/v1';

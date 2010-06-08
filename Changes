@@ -1,5 +1,17 @@
-Revision history for WWW-GitHub-Gist
+commit 9c1682f55d9f4e7798c710ae3297418fab39d672
+Author: Alessandro Ghedini <al3xbio@gmail.com>
+Date:   Tue Jun 8 21:53:00 2010 +0200
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+    update prereq in Makefile.PL
 
+commit c4b1f4570fe1b0532eed2c16d722d9e88d9b60d7
+Author: Alessandro Ghedini <al3xbio@gmail.com>
+Date:   Sun Jun 6 20:50:59 2010 +0200
+
+    add supported languages in POD
+
+commit 2125af3350b537f3be82f94fbf0ed394b504f9a1
+Author: Alessandro Ghedini <al3xbio@gmail.com>
+Date:   Sun Jun 6 20:49:28 2010 +0200
+
+    first commit
