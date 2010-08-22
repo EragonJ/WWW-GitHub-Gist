@@ -51,9 +51,9 @@ if ($ext eq '') {
 my $gist = WWW::GitHub::Gist -> new(user => $login, token => $token);
 
 $gist -> add_file($basename, $data, $ext);
-$gist -> create;
+my $info = $gist -> create;
 
-my $repo = $gist -> {'repo'};
+my $repo = @$info[0] -> {'repo'};
 
 print "Gist $repo successfully created.\n";
 print "Public Clone URL: git://gist.github.com/$repo.git\n";
