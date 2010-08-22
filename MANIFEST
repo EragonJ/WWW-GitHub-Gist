@@ -3,6 +3,7 @@ MANIFEST
 Makefile.PL
 README
 lib/WWW/GitHub/Gist.pm
+script/gist.pl
 t/00-load.t
 t/01-gist.t
 t/manifest.t

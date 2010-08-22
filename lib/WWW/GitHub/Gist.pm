@@ -14,11 +14,11 @@ WWW::GitHub::Gist - Perl interface to Gist.GitHub.com
 
 =head1 VERSION
 
-Version 0.02ì3
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 my $GIST_URL   = 'http://gist.github.com';
 my $API_URL    = 'http://gist.github.com/api/v1';
@@ -351,10 +351,6 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
-
-=item WWW::GitHub::Gist homepage
-
-L<http://alexlog.co.cc/projects/www-github-gist>
 
 =item Git repository
 
