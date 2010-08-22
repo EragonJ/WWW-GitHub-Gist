@@ -10,7 +10,7 @@ WriteMakefile(
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),
-    PL_FILES            => {},
+    EXE_FILES	=> ['script/gist.pl'],
     PREREQ_PM => {
         'Test::More' => 0,
         'LWP::UserAgent' => 0,
