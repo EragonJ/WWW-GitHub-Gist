@@ -129,9 +129,12 @@ Add a file to the current gist
 sub add_file {
 	my ($self, $filename, $data, $extension) = @_;
 
-	push @{$self -> {'files'}}, {'file_ext'      => $extension ? $extension : '.txt',
-				     'file_name'     => $filename,
-				     'file_contents' => $data};
+	push @{ $self -> {'files'} },
+		{
+			'file_ext'      => $extension ? $extension : '.txt',
+			'file_name'     => $filename,
+			'file_contents' => $data
+		};
 }
 
 =head2 create
