@@ -12,13 +12,7 @@ use strict;
 
 WWW::GitHub::Gist - Perl interface to Gist.GitHub.com
 
-=head1 VERSION
-
-Version 0.05
-
 =cut
-
-our $VERSION = '0.05';
 
 my $GIST_URL   = 'http://gist.github.com';
 my $API_URL    = 'http://gist.github.com/api/v1';
@@ -55,7 +49,7 @@ Create a L<WWW::GitHub::Gist> object
 
 sub new {
 	my ($class, %args) = @_;
- 
+
 	my $self = bless({%args}, $class);
 
 	return $self;
@@ -69,7 +63,7 @@ Retrieve information about current gist
 
 sub info {
 	my $self = shift;
-	
+
 	my $url = "$API_URL/$API_FORMAT/".$self -> {'id'};
 
 	return request($url, 'GET') -> {'gists'} -> [0];
@@ -83,7 +77,7 @@ Retrieve a file of current gist.
 
 sub file {
 	my ($self, $filename) = @_;
-	
+
 	my $url = "$GIST_URL/raw/".$self -> {'id'}."/$filename";
 
 	return get_request($url, 'GET');
@@ -97,7 +91,7 @@ Retrieve user's gists
 
 sub user {
 	my $self = shift;
-	
+
 	my $url = "$API_URL/$API_FORMAT/gists/".$self -> {'user'};
 
 	return request($url, 'GET') -> {'gists'};
@@ -134,12 +128,12 @@ sub create {
 		my $ext      = $file -> {'file_ext'};
 		my $filename = $file -> {'file_name'};
 		my $data     = $file -> {'file_contents'};
-		
+
 		push @request,  "file_ext[$filename]" 	   => $ext,
 				"file_name[$filename]"	   => $filename,
 				"file_contents[$filename]" => $data;
 	}
-	
+
 	my $url = "$API_URL/$API_FORMAT/new";
 
 	return request($url, 'POST', \@request) -> {'gists'};
@@ -204,7 +198,7 @@ sub post_request {
 	my $response = $ua -> request(POST $url, $request) -> as_string;
 
 	my $status = (split / /,(split /\n/, $response)[0])[1];
-	
+
 	croak "ERROR: Server reported status $status" if $status != 200;
 
 	my @data = split('\n\n', $response);
@@ -220,9 +214,9 @@ Parse the response of an HTTP request.
 
 sub parse_response {
 	my $data = shift;
-	
+
 	my $json_text = decode_json $data;
-	
+
 	return $json_text;
 }
 
