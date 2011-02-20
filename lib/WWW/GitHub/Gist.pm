@@ -1,14 +1,11 @@
 package WWW::GitHub::Gist;
 
 use Carp;
+use JSON;
 use HTTP::Tiny;
 
-use LWP::UserAgent;
-use HTTP::Request::Common;
-use JSON;
-
-use warnings;
 use strict;
+use warnings;
 
 =head1 NAME
 
@@ -75,7 +72,7 @@ sub info {
 		croak 'Err: '.$response -> {'reason'};
 	}
 
-	my $info	= parse_response($response -> {'content'});
+	my $info	= _parse_response($response -> {'content'});
 
 	return @{ $info -> {'gists'} }[0];
 }
@@ -115,7 +112,7 @@ sub user {
 		croak 'Err: '.$response -> {'reason'};
 	}
 
-	my $info	= parse_response($response -> {'content'});
+	my $info	= _parse_response($response -> {'content'});
 
 	return $info -> {'gists'};
 }
@@ -173,85 +170,20 @@ sub create {
 		croak 'Err: '.$response -> {'reason'};
 	}
 
-	my $info	= parse_response($response -> {'content'});
+	my $info	= _parse_response($response -> {'content'});
 
 	return $info -> {'gists'};
 }
 
-=head1 SUBROUTINES
+=head1 INTERNAL SUBROUTINES
 
-=head2 request( $url, $type, $request )
-
-Make an HTTP request and parse the response.
-
-=cut
-
-sub request {
-	my ($url, $type, $request) = @_;
-	my $response;
-
-	if ($type eq 'GET') {
-		$response = get_request($url);
-	} elsif ($type eq 'POST') {
-		$response = post_request($url, $request);
-	}
-
-	my $data = parse_response($response);
-
-	return $data;
-}
-
-=head2 get_request( $url )
-
-Make a GET request.
-
-=cut
-
-sub get_request {
-	my $url = shift;
-	my $ua = LWP::UserAgent -> new;
-	$ua -> agent("");
-
-	my $response = $ua -> request(GET $url) -> as_string;
-
-	my $status = (split / /,(split /\n/, $response)[0])[1];
-
-	croak "ERROR: Server reported status $status" if $status != 200;
-
-	my @data = split('\n\n', $response);
-
-	return $data[1];
-}
-
-=head2 post_request( $url, %request )
-
-Make a POST request.
-
-=cut
-
-sub post_request {
-	my ($url, $request) = @_;
-	my $ua = LWP::UserAgent -> new;
-	$ua -> agent("");
-
-	my $response = $ua -> request(POST $url, $request) -> as_string;
-
-	my $status = (split / /,(split /\n/, $response)[0])[1];
-
-	croak "ERROR: Server reported status $status" if $status != 200;
-
-	my @data = split('\n\n', $response);
-
-	return $data[1];
-}
-
-=head2 parse_response( $data )
+=head2 _parse_response( $data )
 
 Parse the response of an HTTP request.
 
 =cut
 
-sub parse_response {
+sub _parse_response {
 	my $data = shift;
 
 	my $json_text = decode_json $data;
