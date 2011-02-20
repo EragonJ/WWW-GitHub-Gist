@@ -108,9 +108,16 @@ Retrieve user's gists
 sub user {
 	my $self = shift;
 
-	my $url = "$API_URL/$API_FORMAT/gists/".$self -> {'user'};
+	my $url		= "$API_URL/$API_FORMAT/gists/".$self -> {'user'};
+	my $response	= $http -> get($url);
 
-	return request($url, 'GET') -> {'gists'};
+	if ($response -> {'status'} != 200) {
+		croak 'Err: '.$response -> {'reason'};
+	}
+
+	my $info	= parse_response($response -> {'content'});
+
+	return $info -> {'gists'};
 }
 
 =head2 add_file( $filename, $data, $extension )
