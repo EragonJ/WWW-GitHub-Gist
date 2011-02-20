@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use File::Basename;
 use WWW::GitHub::Gist;
 
 use strict;
@@ -13,71 +14,77 @@ gist - GitHub Gist creator
 
 =head1 SYNOPSIS
 
-gist [OPTIONS]
+ gist FILE [EXTENSION]
+
+ Examples:
+   $ gist somerandomfile.pl    # Make gist extract the file extension
+   $ gist otherrandomfile .pl  # Explicitly set file extension
 
 =cut
 
-die "For info type 'perldoc $0'\n" unless $#ARGV > 0;
+die "For info type 'perldoc $0'\n" if $#ARGV < 0;
 
-my ($file, $login, $token, $ext);
+my $login	= $ENV{GITHUB_USER} || `git config github.user`;
+my $token	= $ENV{GITHUB_TOKEN} || `git config github.token`;
 
-$login = $ENV{GITHUB_USER} || `git config github.user`;
-$token = $ENV{GITHUB_TOKEN} || `git config github.token`;
+chomp $login; chomp $token;
 
-for (my $i = 0; $i < $#ARGV + 1; $i++) {
-	$file	= $ARGV[$i+1] if ($ARGV[$i] eq "-f");
-	$login	= $ARGV[$i+1] if ($ARGV[$i] eq "-l");
-	$token	= $ARGV[$i+1] if ($ARGV[$i] eq "-t");
-	$ext	= $ARGV[$i+1] if ($ARGV[$i] eq "-e");
-	die "For info type 'perldoc $0'\n" if ($ARGV[$i] eq "-h");
+if (!$login) {
+	print STDERR "Enter username: ";
+	chop($login = <STDIN>);
 }
 
-open(FILE, $file) or die "ERROR: Enter a valid file name.";
+if (!$token) {
+	print STDERR "Enter token for '$login': ";
+	system('stty','-echo') if $^O eq 'linux';
+	chop($login = <STDIN>);
+	system('stty','echo') if $^O eq 'linux';
+	print "\n";
+}
+
+my $file	= $ARGV[0];
+my $ext		= $ARGV[1];
+
+open(FILE, $file) or die "Err: Enter a valid file name.\n";
 my $data = join('', <FILE>);
 close FILE;
 
-my $basename = (split /\//, $file)[-1];
+my $basename	= basename($file);
 
-if ($ext eq '') {
-	$ext = ".".($file =~ m/([^.]+)$/)[0];
-	print "Found $ext extension. You can provide custom extension using '-e' option.\n";
+if (!$ext) {
+	$ext	= ".".($file =~ m/([^.]+)$/)[0];
+	print "Found $ext extension. You can provide custom extension using the '-e' option.\n";
 }
 
-my $gist = WWW::GitHub::Gist -> new(user => $login, token => $token);
+my $gist = WWW::GitHub::Gist -> new(
+	user	=> $login,
+	token	=> $token
+);
 
-$gist -> add_file($basename, $data, $ext);
-my $info = $gist -> create;
-
-my $repo = @$info[0] -> {'repo'};
+$gist -> add_file($file, $data, $ext);
+my $repo = $gist -> create() -> {'repo'};
 
 print "Gist $repo successfully created.\n";
 print "Public Clone URL: git://gist.github.com/$repo.git\n";
 print "Private Clone URL: git\@gist.github.com:$repo.git\n";
 
-=head1 OPTIONS
-
-=over
-
-=item -l	Specifies the username.
-
-=item -t	User's GitHub API token, used for login.
-
-=item -f	File to upload.
-
-=item -e	File extension, used for syntax highlighting (optional).
-
-=back
-
 =head1 CONFIGURATION
 
-Username and api token variables could be set via the GITHUB_USER and
-GITHUB_TOKEN environment variables. These settings are overwritten by the
-ones passed via command-line.
+The login username and the API token can be set via the GITHUB_USER and
+GITHUB_TOKEN environment variables. If not set, will be used the
+values of C<github.user> and C<github.token> from the Git configuration.
+To set them, type:
+
+    $ git config --global github.user LoginName
+    $ git config --global github.token GitHubToken
+
+If neither C<github.user> and C<github.token> are set, the login name and
+the API token will be asked interactively to the user.
 
 =head1 TOKEN
 
-API token can be found on the Account Settings page.
-Visit the url: https://github.com/account
+The API token can be found on the C<Account Settings> page on GitHub.
+Visit the url: L<https://github.com/account>
 
 =head1 AUTHOR
 
@@ -127,7 +134,7 @@ Gist.GitHub.com APIs are incomplete so many features are not accessible.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2010 Alessandro Ghedini.
+Copyright 2011 Alessandro Ghedini.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
