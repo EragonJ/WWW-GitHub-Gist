@@ -89,9 +89,14 @@ Retrieve a file of current gist.
 sub file {
 	my ($self, $filename) = @_;
 
-	my $url = "$GIST_URL/raw/".$self -> {'id'}."/$filename";
+	my $url		= "$GIST_URL/raw/".$self -> {'id'}."/$filename";
+	my $response	= $http -> get($url);
 
-	return get_request($url, 'GET');
+	if ($response -> {'status'} != 200) {
+		croak 'Err: '.$response -> {'reason'};
+	}
+
+	return $response -> {'content'};
 }
 
 =head2 user
