@@ -13,9 +13,9 @@ WWW::GitHub::Gist - Perl interface to Gist.GitHub.com
 
 =cut
 
-my $GIST_URL   = 'http://gist.github.com';
-my $API_URL    = 'http://gist.github.com/api/v1';
-my $API_FORMAT = 'json';
+use constant GIST_URL	=> 'http://gist.github.com';
+use constant API_URL	=> 'http://gist.github.com/api/v1';
+use constant API_FORMAT	=> 'json';
 
 my $http = HTTP::Tiny -> new();
 
@@ -65,7 +65,7 @@ Retrieve information about current gist
 sub info {
 	my $self = shift;
 
-	my $url		= "$API_URL/$API_FORMAT/".$self -> {'id'};
+	my $url		= API_URL.'/'.API_FORMAT.'/'.$self -> {'id'};
 	my $response	= $http -> get($url);
 
 	if ($response -> {'status'} != 200) {
@@ -86,7 +86,7 @@ Retrieve a file of current gist.
 sub file {
 	my ($self, $filename) = @_;
 
-	my $url		= "$GIST_URL/raw/".$self -> {'id'}."/$filename";
+	my $url		= GIST_URL.'/raw/'.$self -> {'id'}."/$filename";
 	my $response	= $http -> get($url);
 
 	if ($response -> {'status'} != 200) {
@@ -105,7 +105,7 @@ Retrieve user's gists
 sub user {
 	my $self = shift;
 
-	my $url		= "$API_URL/$API_FORMAT/gists/".$self -> {'user'};
+	my $url		= API_URL.'/'.API_FORMAT.'/gists/'.$self -> {'user'};
 	my $response	= $http -> get($url);
 
 	if ($response -> {'status'} != 200) {
@@ -144,7 +144,7 @@ sub create {
 	my @params;
 	my $self = shift;
 
-	my $url		= "$API_URL/$API_FORMAT/new";
+	my $url		= API_URL.'/'.API_FORMAT.'/new';
 
 	my $login	= 'login='.$self -> {'user'};
 	my $token	= 'token='.$self -> {'token'};
