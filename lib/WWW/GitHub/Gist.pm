@@ -1,6 +1,8 @@
 package WWW::GitHub::Gist;
 
 use Carp;
+use HTTP::Tiny;
+
 use LWP::UserAgent;
 use HTTP::Request::Common;
 use JSON;
@@ -17,6 +19,8 @@ WWW::GitHub::Gist - Perl interface to Gist.GitHub.com
 my $GIST_URL   = 'http://gist.github.com';
 my $API_URL    = 'http://gist.github.com/api/v1';
 my $API_FORMAT = 'json';
+
+my $http = HTTP::Tiny -> new();
 
 =head1 SYNOPSIS
 
@@ -64,9 +68,16 @@ Retrieve information about current gist
 sub info {
 	my $self = shift;
 
-	my $url = "$API_URL/$API_FORMAT/".$self -> {'id'};
+	my $url		= "$API_URL/$API_FORMAT/".$self -> {'id'};
+	my $response	= $http -> get($url);
 
-	return request($url, 'GET') -> {'gists'} -> [0];
+	if ($response -> {'status'} != 200) {
+		croak 'Err: '.$response -> {'reason'};
+	}
+
+	my $info	= parse_response($response -> {'content'});
+
+	return @{ $info -> {'gists'} }[0];
 }
 
 =head2 file( $filename )
