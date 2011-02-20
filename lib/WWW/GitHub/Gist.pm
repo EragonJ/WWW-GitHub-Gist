@@ -231,7 +231,7 @@ sub create {
 
 	my $info	= _parse_response($response -> {'content'});
 
-	return $info -> {'gists'};
+	return @{ $info -> {'gists'} }[0];
 }
 
 =head1 INTERNAL SUBROUTINES
