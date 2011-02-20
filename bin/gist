@@ -3,22 +3,17 @@
 use WWW::GitHub::Gist;
 
 use strict;
+use warnings;
 
 =head1 NAME
 
-gist.pl - GitHub Gist creator
-
-=head1 VERSION
-
-Version 0.05
+gist - GitHub Gist creator
 
 =cut
 
-our $VERSION = '0.05';
-
 =head1 SYNOPSIS
 
-gist.pl [OPTIONS]
+gist [OPTIONS]
 
 =cut
 
@@ -62,7 +57,7 @@ print "Private Clone URL: git\@gist.github.com:$repo.git\n";
 =head1 OPTIONS
 
 =over
-		
+
 =item -l	Specifies the username.
 
 =item -t	User's GitHub API token, used for login.
