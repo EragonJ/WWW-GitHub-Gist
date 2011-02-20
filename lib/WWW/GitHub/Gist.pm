@@ -144,25 +144,38 @@ Create a gist using files added with add_file()
 =cut
 
 sub create {
+	my @params;
 	my $self = shift;
 
-	my @request = ('login', $self -> {'user'},
-		       'token', $self -> {'token'}
-	              );
+	my $url		= "$API_URL/$API_FORMAT/new";
+
+	my $login	= 'login='.$self -> {'user'};
+	my $token	= 'token='.$self -> {'token'};
+
+	push @params, $login, $token;
 
 	foreach my $file (@{$self -> {'files'}}) {
-		my $ext      = $file -> {'file_ext'};
-		my $filename = $file -> {'file_name'};
-		my $data     = $file -> {'file_contents'};
+		my $ext		= $file -> {'file_ext'};
+		my $filename	= $file -> {'file_name'};
+		my $data	= $file -> {'file_contents'};
 
-		push @request,  "file_ext[$filename]" 	   => $ext,
-				"file_name[$filename]"	   => $filename,
-				"file_contents[$filename]" => $data;
+		push @params,	"file_ext[$filename]=$ext",
+				"file_name[$filename]=$filename",
+				"file_contents[$filename]=$data";
 	}
 
-	my $url = "$API_URL/$API_FORMAT/new";
+	my $response = $http -> request('POST', $url, {
+		content => join("&", @params),
+		headers => {'content-type' => 'application/x-www-form-urlencoded'}
+	});
 
-	return request($url, 'POST', \@request) -> {'gists'};
+	if ($response -> {'status'} != 200) {
+		croak 'Err: '.$response -> {'reason'};
+	}
+
+	my $info	= parse_response($response -> {'content'});
+
+	return $info -> {'gists'};
 }
 
 =head1 SUBROUTINES
