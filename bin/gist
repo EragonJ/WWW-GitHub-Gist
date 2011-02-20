@@ -21,8 +21,8 @@ die "For info type 'perldoc $0'\n" unless $#ARGV > 0;
 
 my ($file, $login, $token, $ext);
 
-$login = $ENV{GITHUB_USER};
-$token = $ENV{GITHUB_TOKEN};
+$login = $ENV{GITHUB_USER} || `git config github.user`;
+$token = $ENV{GITHUB_TOKEN} || `git config github.token`;
 
 for (my $i = 0; $i < $#ARGV + 1; $i++) {
 	$file	= $ARGV[$i+1] if ($ARGV[$i] eq "-f");
