@@ -9,7 +9,7 @@ use warnings;
 
 =head1 NAME
 
-WWW::GitHub::Gist - Perl interface to Gist.GitHub.com
+WWW::GitHub::Gist - Perl interface to GitHub's Gist pastebin service
 
 =cut
 
@@ -21,30 +21,60 @@ my $http = HTTP::Tiny -> new();
 
 =head1 SYNOPSIS
 
-WWW::GitHub::Gist is an object-oriented interface to Gist.GitHub.com.
+L<WWW::GitHub::Gist> is an object-oriented interface to the pastebin
+service of GitHub L<gist.github.com>.
 
+    use feature 'say';
     use WWW::GitHub::Gist;
 
-    my $gist = WWW::GitHub::Gist->new(id => 'gist id');
+    my $gist = WWW::GitHub::Gist -> new(id => 'gist id');
 
-    print $gist->info->{'user'}."\n";
+    # Print the gist's author
+    say $gist -> info -> {'owner'};
 
-    $gist = WWW::GitHub::Gist->new(user => 'username');
+    # Print every ID of the gists owned by USERNAME
+    $gist = WWW::GitHub::Gist -> new(user => 'USERNAME');
 
-    foreach (@{$gist->user}) {
-	    print $_->{'repo'}."\n";
+    foreach (@{ $gist -> user() }) {
+      say $_ -> {'repo'};
     }
 
-    $gist = WWW::GitHub::Gist->new(user => 'username', token => 'github token');
+    # Create a new gist and print its ID
+    my $login = `git config github.user`;
+    my $token = `git config github.token`;
 
-    $gist->add_file('test', 'some data here', '.txt');
-    $gist->create;
+    chomp $login; chomp $token;
+
+    $gist = WWW::GitHub::Gist -> new(
+      user  => $login,
+      token => $token
+    );
+
+    $gist -> add_file('test', 'some data here', '.txt');
+    say $gist -> create() -> {'repo'};
 
 =head1 METHODS
 
-=head2 new
+=head2 new( %args )
 
-Create a L<WWW::GitHub::Gist> object
+Create a L<WWW::GitHub::Gist> object. The C<%args> hash may contain the
+following fields:
+
+=over
+
+=item C<id>
+
+The ID of an existing gist.
+
+=item C<user>
+
+The name of a GitHub user.
+
+=item C<token>
+
+The GitHub token used for the login.
+
+=back
 
 =cut
 
@@ -56,9 +86,37 @@ sub new {
 	return $self;
 }
 
-=head2 info
+=head2 info()
 
-Retrieve information about current gist
+Returns an hash containing the following fields:
+
+=over
+
+=item C<owner>
+
+The author of the gist.
+
+=item C<created_at>
+
+The date of creation of the gist.
+
+=item C<repo>
+
+The ID of the gist, which identifies its repository.
+
+=item C<files>
+
+An array of the file names contained in the gist.
+
+=item C<public>
+
+Wheter the gist is public or not.
+
+=item C<description>
+
+The description of the gist.
+
+=back
 
 =cut
 
@@ -79,7 +137,7 @@ sub info {
 
 =head2 file( $filename )
 
-Retrieve a file of current gist.
+Retrieve the selected file content of the current gist.
 
 =cut
 
@@ -96,7 +154,7 @@ sub file {
 	return $response -> {'content'};
 }
 
-=head2 user
+=head2 user()
 
 Retrieve user's gists
 
@@ -136,7 +194,8 @@ sub add_file {
 
 =head2 create
 
-Create a gist using files added with add_file()
+Create a gist using files added with add_file() and returns its info
+in a hash. See C<info()> for more details.
 
 =cut
 
@@ -341,11 +400,11 @@ L<http://search.cpan.org/dist/WWW-GitHub-Gist/>
 
 =head1 ACKNOWLEDGEMENTS
 
-Gist.GitHub.com APIs are incomplete so many features are not accessible.
+Gist.GitHub.com APIs are incomplete, so many features are not accessible.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2010 Alessandro Ghedini.
+Copyright 2011 Alessandro Ghedini.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
